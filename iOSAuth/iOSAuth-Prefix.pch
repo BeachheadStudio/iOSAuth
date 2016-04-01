@@ -1,0 +1,26 @@
+//
+//  iOSAuth-Prefix.pch
+//  iOSAuth
+//
+//  Created by Keith Miller on 3/31/16.
+//  Copyright © 2016 SingleMalt. All rights reserved.
+//
+
+#ifndef iOSAuth_Prefix_pch
+#define iOSAuth_Prefix_pch
+
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+void UnitySendMessage(const char* obj, const char* method, const char* msg);
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif /* iOSAuth_Prefix_pch */

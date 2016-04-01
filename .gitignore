@@ -4,6 +4,7 @@
 
 ## Build generated
 build/
+Builds/
 DerivedData
 
 ## Various settings
@@ -51,3 +52,9 @@ Carthage/Build
 
 fastlane/report.xml
 fastlane/screenshots
+
+# OSX
+.DS_Store
+
+# Jetbrains
+.idea/
