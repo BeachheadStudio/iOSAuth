@@ -24,7 +24,9 @@ extern NSString *const PresentAuthViewController;
 @property (nonatomic, readonly) PlayerInfo *playerInfo;
 @property (nonatomic, readonly) BOOL anonymous;
 @property (nonatomic, readonly) NSHTTPCookie *httpCookie;
+#if !UNITY_5
 @property (nonatomic, readwrite) ViewController *rootViewController;
+#endif
 
 +(instancetype)sharedAuthService;
 +(NSArray *)authStatus;
@@ -36,7 +38,9 @@ extern NSString *const PresentAuthViewController;
 -(NSString *)getFailureError;
 -(NSString *)getServerPlayerId;
 -(NSString *)getSessionToken;
+#if !UNITY_5
 -(void)setRootViewController:(ViewController *)controller;
+#endif
 -(void)setServerPlayerId:(NSString *)serverPlayerId;
 -(void)updateUIText;
 -(BOOL)isAnonymous;

@@ -97,7 +97,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                            timestamp:timestamp
                                                                 name:localPlayer.alias
                                                             bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+#if !UNITY_5
                     [self updateUIText];
+#endif
                     [self fireServerRequest];
                 } else {
                     NSLog(@"generated player info");
@@ -108,7 +110,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                            timestamp:timestamp
                                                                 name:localPlayer.alias
                                                             bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+#if !UNITY_5
                     [self updateUIText];
+#endif
                     [self fireServerRequest];
                 }
             }];
@@ -125,7 +129,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                    timestamp:0
                                                         name:@""
                                                     bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+#if !UNITY_5
             [self updateUIText];
+#endif
             [self fireServerRequest];
         }
     };
@@ -199,8 +205,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               [UnityExtern sendUnityMessage:@"Main Camera"
                                                      method:@"LoginResult"
                                                     message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
-
+#if !UNITY_5
                               [self updateUIText];
+#endif
                               return;
                           }
 
@@ -212,8 +219,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               [UnityExtern sendUnityMessage:@"Main Camera"
                                                      method:@"LoginResult"
                                                     message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
-
+#if !UNITY_5
                               [self updateUIText];
+#endif
                               return;
                           }
 
@@ -247,7 +255,10 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           }
 
                           _serverAuthed = YES;
+#if !UNITY_5
                           [self updateUIText];
+#endif
+
                       }];
 }
 
@@ -280,9 +291,11 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     _playerInfo = playerInfo;
 }
 
+#if !UNITY_5
 - (void)setRootViewController:(ViewController *)controller {
     _rootViewController = controller;
 }
+#endif
 
 -(void)updateUIText {
     if(_rootViewController != nil) {
