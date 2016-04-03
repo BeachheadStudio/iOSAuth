@@ -94,26 +94,26 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                     NSLog(@"GameCenter auth failure: %@ ", error);
                     _lasterror = error;
 
-                    self.playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
-                                                                 url:publicKeyUrl
-                                                           signature:signature
-                                                                salt:salt
-                                                           timestamp:timestamp
-                                                                name:localPlayer.alias
-                                                            bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+                    _playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
+                                                             url:publicKeyUrl
+                                                       signature:signature
+                                                            salt:salt
+                                                       timestamp:timestamp
+                                                            name:localPlayer.alias
+                                                        bundleId:[[NSBundle mainBundle] bundleIdentifier]];
 #if !UNITY_IOS
                     [self updateUIText];
 #endif
                     [self fireServerRequest];
                 } else {
                     NSLog(@"generated player info");
-                    self.playerInfo = [[PlayerInfo alloc] initWithId:localPlayer.playerID
-                                                                 url:publicKeyUrl
-                                                           signature:signature
-                                                                salt:salt
-                                                           timestamp:timestamp
-                                                                name:localPlayer.alias
-                                                            bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+                    _playerInfo = [[PlayerInfo alloc] initWithId:localPlayer.playerID
+                                                             url:publicKeyUrl
+                                                       signature:signature
+                                                            salt:salt
+                                                       timestamp:timestamp
+                                                            name:localPlayer.alias
+                                                        bundleId:[[NSBundle mainBundle] bundleIdentifier]];
 #if !UNITY_IOS
                     [self updateUIText];
 #endif
@@ -126,13 +126,13 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
             _gcAuthed = NO;
             _anonymous = YES;
 
-            self.playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
-                                                         url:nil
-                                                   signature:nil
-                                                        salt:nil
-                                                   timestamp:0
-                                                        name:@""
-                                                    bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+            _playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
+                                                     url:nil
+                                               signature:nil
+                                                    salt:nil
+                                               timestamp:0
+                                                    name:@""
+                                                bundleId:[[NSBundle mainBundle] bundleIdentifier]];
 #if !UNITY_IOS
             [self updateUIText];
 #endif
@@ -199,14 +199,14 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 - (void)fireServerRequest {
     [HTTPHelper HTTPRequest:_serverUrl
                      method:POST
-                       body:[self.playerInfo convertToDict]
+                       body:[_playerInfo convertToDict]
                       block:^(NSData *data, NSURLResponse *response, NSError *blockerror) {
                           NSLog(@"response from server");
                           if (blockerror != nil) {
                               _lasterror = blockerror;
                               NSLog(@"%@", [self getFailureError]);
 
-                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
+                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
 #if !UNITY_IOS
                               [self updateUIText];
 #endif
@@ -219,7 +219,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           if (statusCode != 200) {
                               NSLog(@"AuthServer call failed");
 
-                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
+                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
 #if !UNITY_IOS
                               [self updateUIText];
 #endif
@@ -246,9 +246,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           }
 
                           if(_cancelled) {
-                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[3] UTF8String]);
+                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[3] UTF8String]);
                           } else {
-                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[1] UTF8String]);
+                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[1] UTF8String]);
                           }
 
                           _serverAuthed = YES;
@@ -279,7 +279,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 -(void)setPlayerInfo:(PlayerInfo *)playerInfo {
     if(_playerInfo.playerId != nil) {
         if(_playerInfo.playerId != playerInfo.playerId) {
-            sendUnityMessage("Main Camera", "PlayerChange", "true");
+            SendUnityMessage("Main Camera", "PlayerChange", "true");
         }
     }
 

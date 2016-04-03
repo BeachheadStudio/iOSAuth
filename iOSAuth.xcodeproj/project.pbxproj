@@ -15,7 +15,7 @@
 		D2A792FE1CAC7B6700635529 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2A792FD1CAC7B6700635529 /* Assets.xcassets */; };
 		D2A793011CAC7B6700635529 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2A792FF1CAC7B6700635529 /* LaunchScreen.storyboard */; };
 		D2B507B01CAC861800EBE806 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B507AF1CAC861800EBE806 /* GameKit.framework */; };
-		DC35519F66D10112E02CF320 /* UnityBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = DC35556FC83B37E9C0015C29 /* UnityBridge.m */; };
+		DC35519F66D10112E02CF320 /* UnityBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = DC35556FC83B37E9C0015C29 /* UnityBridge.mm */; };
 		DC35548E3F25CBF10868FC3B /* PlayerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = DC3557C62585E42D2738341D /* PlayerInfo.m */; };
 		DC3557383BFCCBFD158F8026 /* AuthService.m in Sources */ = {isa = PBXBuildFile; fileRef = DC355D4AA530C9E000F2944B /* AuthService.m */; };
 		DC3557F1E53BB4E09C26C7BC /* HTTPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = DC355F20CDAACFBAEC19A131 /* HTTPHelper.m */; };
@@ -52,7 +52,7 @@
 		D2A793021CAC7B6700635529 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2B507AF1CAC861800EBE806 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		DC35530839406B1FBE7A607C /* UnityBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnityBridge.h; path = iOSAuth/Unity/UnityBridge.h; sourceTree = "<group>"; };
-		DC35556FC83B37E9C0015C29 /* UnityBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnityBridge.m; path = iOSAuth/Unity/UnityBridge.m; sourceTree = "<group>"; };
+		DC35556FC83B37E9C0015C29 /* UnityBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UnityBridge.mm; path = iOSAuth/Unity/UnityBridge.mm; sourceTree = "<group>"; };
 		DC3557C62585E42D2738341D /* PlayerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayerInfo.m; path = iOSAuth/Auth/PlayerInfo.m; sourceTree = "<group>"; };
 		DC355B69CB309BF1CDA8FC9D /* PlayerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerInfo.h; path = iOSAuth/Auth/PlayerInfo.h; sourceTree = "<group>"; };
 		DC355D44D2C1B1A430B10F22 /* HTTPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTTPHelper.h; path = iOSAuth/Auth/HTTPHelper.h; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		D2D017D91CAE3C0500674301 /* Unity */ = {
 			isa = PBXGroup;
 			children = (
-				DC35556FC83B37E9C0015C29 /* UnityBridge.m */,
+				DC35556FC83B37E9C0015C29 /* UnityBridge.mm */,
 				DC35530839406B1FBE7A607C /* UnityBridge.h */,
 			);
 			name = Unity;
@@ -294,7 +294,7 @@
 				D2A792F31CAC7B6700635529 /* main.m in Sources */,
 				DC3557383BFCCBFD158F8026 /* AuthService.m in Sources */,
 				DC35548E3F25CBF10868FC3B /* PlayerInfo.m in Sources */,
-				DC35519F66D10112E02CF320 /* UnityBridge.m in Sources */,
+				DC35519F66D10112E02CF320 /* UnityBridge.mm in Sources */,
 				DC3557F1E53BB4E09C26C7BC /* HTTPHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

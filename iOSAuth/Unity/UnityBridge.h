@@ -11,7 +11,17 @@
 
 @end
 
-void sendUnityMessage(const char* object, const char* method, const char* message);
+NSString* CreateNSString(const char* string);
+const char* CreateConstChar(NSString *string);
+char* MakeStringCopy(const char* string);
+
+#if defined __cplusplus
+extern "C" {
+#endif
+void SendUnityMessage(const char *object, const char *method, const char *message);
+#if __cplusplus
+}
+#endif
 
 #if __cplusplus
 extern "C" {
