@@ -11,7 +11,7 @@
 
 #import "AuthService.h"
 #import "PlayerInfo.h"
-#import "UnityExtern.h"
+#import "UnityBridge.h"
 #import "HTTPHelper.h"
 
 NSString *const PresentAuthViewController = @"present_authentication_view_controller";
@@ -205,9 +205,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               _lasterror = blockerror;
                               NSLog(@"%@", [self getFailureError]);
 
-                              [UnityExtern sendUnityMessage:@"Main Camera"
-                                                     method:@"LoginResult"
-                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
+                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
 #if !UNITY_5
                               [self updateUIText];
 #endif
@@ -219,9 +217,8 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 
                           if (statusCode != 200) {
                               NSLog(@"AuthServer call failed");
-                              [UnityExtern sendUnityMessage:@"Main Camera"
-                                                     method:@"LoginResult"
-                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
+
+                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
 #if !UNITY_5
                               [self updateUIText];
 #endif
@@ -248,13 +245,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           }
 
                           if(_cancelled) {
-                              [UnityExtern sendUnityMessage:@"Main Camera"
-                                                     method:@"LoginResult"
-                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[3] UTF8String]]];
+                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[3] UTF8String]);
                           } else {
-                              [UnityExtern sendUnityMessage:@"Main Camera"
-                                                     method:@"LoginResult"
-                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[1] UTF8String]]];
+                              sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[1] UTF8String]);
                           }
 
                           _serverAuthed = YES;
@@ -285,9 +278,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 -(void)setPlayerInfo:(PlayerInfo *)playerInfo {
     if(_playerInfo.playerId != nil) {
         if(_playerInfo.playerId != playerInfo.playerId) {
-            [UnityExtern sendUnityMessage:@"Main Camera"
-                                   method:@"PlayerChange"
-                                  message:@"true"];
+            sendUnityMessage("Main Camera", "PlayerChange", "true");
         }
     }
 
