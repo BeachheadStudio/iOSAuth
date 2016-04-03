@@ -6,6 +6,9 @@
 //  Copyright © 2016 SingleMalt. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "ViewController.h"
 #import "AuthService.h"
 #import "HTTPHelper.h"

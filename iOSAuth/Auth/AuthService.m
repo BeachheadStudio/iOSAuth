@@ -6,6 +6,9 @@
 //  Copyright © 2016 SingleMalt. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "AuthService.h"
 #import "PlayerInfo.h"
 #import "UnityExtern.h"

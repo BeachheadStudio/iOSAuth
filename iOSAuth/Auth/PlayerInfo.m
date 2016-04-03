@@ -3,6 +3,7 @@
 // Copyright (c) 2016 SingleMalt. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "PlayerInfo.h"
 
 @implementation PlayerInfo
