@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <GameKit/GameKit.h>
 
 #import "AuthService.h"
 #import "PlayerInfo.h"
@@ -100,7 +101,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                            timestamp:timestamp
                                                                 name:localPlayer.alias
                                                             bundleId:[[NSBundle mainBundle] bundleIdentifier]];
-#if !UNITY_5
+#if !UNITY_IOS
                     [self updateUIText];
 #endif
                     [self fireServerRequest];
@@ -113,7 +114,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                            timestamp:timestamp
                                                                 name:localPlayer.alias
                                                             bundleId:[[NSBundle mainBundle] bundleIdentifier]];
-#if !UNITY_5
+#if !UNITY_IOS
                     [self updateUIText];
 #endif
                     [self fireServerRequest];
@@ -132,7 +133,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                    timestamp:0
                                                         name:@""
                                                     bundleId:[[NSBundle mainBundle] bundleIdentifier]];
-#if !UNITY_5
+#if !UNITY_IOS
             [self updateUIText];
 #endif
             [self fireServerRequest];
@@ -206,7 +207,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               NSLog(@"%@", [self getFailureError]);
 
                               sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
-#if !UNITY_5
+#if !UNITY_IOS
                               [self updateUIText];
 #endif
                               return;
@@ -219,7 +220,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               NSLog(@"AuthServer call failed");
 
                               sendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
-#if !UNITY_5
+#if !UNITY_IOS
                               [self updateUIText];
 #endif
                               return;
@@ -251,7 +252,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           }
 
                           _serverAuthed = YES;
-#if !UNITY_5
+#if !UNITY_IOS
                           [self updateUIText];
 #endif
 
@@ -285,16 +286,16 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     _playerInfo = playerInfo;
 }
 
-#if !UNITY_5
+#if !UNITY_IOS
 - (void)setRootViewController:(ViewController *)controller {
     _rootViewController = controller;
 }
-#endif
 
 -(void)updateUIText {
     if(_rootViewController != nil) {
         [_rootViewController updateTextViews];
     }
 }
+#endif
 
 @end

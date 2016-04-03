@@ -9,9 +9,9 @@
 #ifndef AuthService_h
 #define AuthService_h
 
+#if !UNITY_IOS
 #include "ViewController.h"
-
-@import GameKit;
+#endif
 
 @class PlayerInfo;
 
@@ -24,7 +24,7 @@ extern NSString *const PresentAuthViewController;
 @property (nonatomic, readonly) PlayerInfo *playerInfo;
 @property (nonatomic, readonly) BOOL anonymous;
 @property (nonatomic, readonly) NSHTTPCookie *httpCookie;
-#if !UNITY_5
+#if !UNITY_IOS
 @property (nonatomic, readwrite) ViewController *rootViewController;
 #endif
 
@@ -38,11 +38,11 @@ extern NSString *const PresentAuthViewController;
 -(NSString *)getFailureError;
 -(NSString *)getServerPlayerId;
 -(NSString *)getSessionToken;
-#if !UNITY_5
+#if !UNITY_IOS
 -(void)setRootViewController:(ViewController *)controller;
+-(void)updateUIText;
 #endif
 -(void)setServerPlayerId:(NSString *)serverPlayerId;
--(void)updateUIText;
 -(BOOL)isAnonymous;
 -(void)fireServerRequest;
 

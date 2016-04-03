@@ -16,8 +16,8 @@ void sendUnityMessage(const char* object, const char* method, const char* messag
     NSLog(@"Firing event to unity: %@ %@ %@", [NSString stringWithUTF8String:object],
                                               [NSString stringWithUTF8String:method],
                                               [NSString stringWithUTF8String:message]);
-#if UNITY_5
-    UnitySendMessage([object UTF8String],[method UTF8String], [message UTF8String]);
+#if UNITY_IOS
+    UnitySendMessage(object, method, message);
 #endif
 }
 
