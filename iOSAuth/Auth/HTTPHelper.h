@@ -13,13 +13,13 @@ typedef NS_ENUM(NSUInteger, HTTPMethod)
 
 @interface HTTPHelper : NSObject
 
++(NSOperationQueue *)HTTPQueue;
+
 +(NSString *)HTTPMethodString:(HTTPMethod)method;
 
--(id)init;
--(NSJSONSerialization *)HTTPRequest:(NSURL *)url
-                             method:(HTTPMethod)method
-                               data:(NSJSONSerialization *)data;
-
--(void)connectionDidFinishLoading:(NSURLConnection *)connection;
++(void)HTTPRequest:(NSURL *)url
+            method:(HTTPMethod)method
+              body:(NSMutableDictionary *)body
+             block:(void(^)(NSData *data, NSURLResponse *response, NSError *error))block;
 
 @end

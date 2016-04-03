@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D209E7A31CB0611A00640BD3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D209E7A21CB0611A00640BD3 /* Default-568h@2x.png */; };
 		D2A792F31CAC7B6700635529 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A792F21CAC7B6700635529 /* main.m */; };
 		D2A792F61CAC7B6700635529 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A792F51CAC7B6700635529 /* AppDelegate.m */; };
 		D2A792F91CAC7B6700635529 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A792F81CAC7B6700635529 /* ViewController.m */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D209E7A21CB0611A00640BD3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D289F0E41CADE7BB000CE33B /* iOSAuth-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iOSAuth-Prefix.pch"; sourceTree = "<group>"; };
 		D2A792EE1CAC7B6700635529 /* iOSAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSAuth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2A792F21CAC7B6700635529 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 		D2A792E51CAC7B6700635529 = {
 			isa = PBXGroup;
 			children = (
+				D209E7A21CB0611A00640BD3 /* Default-568h@2x.png */,
 				D2B507AF1CAC861800EBE806 /* GameKit.framework */,
 				D2A792F01CAC7B6700635529 /* iOSAuth */,
 				D2A792EF1CAC7B6700635529 /* Products */,
@@ -261,6 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2A793011CAC7B6700635529 /* LaunchScreen.storyboard in Resources */,
+				D209E7A31CB0611A00640BD3 /* Default-568h@2x.png in Resources */,
 				D2A792FE1CAC7B6700635529 /* Assets.xcassets in Resources */,
 				D2A792FC1CAC7B6700635529 /* Main.storyboard in Resources */,
 			);

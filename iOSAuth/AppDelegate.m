@@ -17,6 +17,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    self.window.backgroundColor = [[UIColor alloc]initWithRed:(CGFloat) (255.0/255.0)
+                                                        green:(CGFloat) (255.0/255.0)
+                                                         blue:(CGFloat) (255.0/255.0)
+                                                        alpha:1.0];
+    
     return YES;
 }
 

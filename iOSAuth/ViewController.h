@@ -8,6 +8,7 @@
 
 @interface ViewController : UINavigationController
 
+-(void)updateTextViews;
 
 @end
 

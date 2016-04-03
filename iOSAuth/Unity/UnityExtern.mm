@@ -10,7 +10,10 @@
 + (void)sendUnityMessage:(NSString *)object
                   method:(NSString *)method
                  message:(NSString *)message {
-//    UnitySendMessage([object UTF8String],[method UTF8String], [message UTF8String]);
+    NSLog(@"Firing event to unity: %@ %@ %@", object, method, message);
+#if UNITY_5
+    UnitySendMessage([object UTF8String],[method UTF8String], [message UTF8String]);
+#endif
 }
 
 @end

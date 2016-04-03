@@ -9,12 +9,15 @@
 #import "AuthService.h"
 #import "PlayerInfo.h"
 #import "UnityExtern.h"
+#import "HTTPHelper.h"
 
 NSString *const PresentAuthViewController = @"present_authentication_view_controller";
 
 @implementation AuthService {
     BOOL _gcAuthed;
     BOOL _serverAuthed;
+    BOOL _cancelled;
+    NSURL *_serverUrl;
 }
 
 +(instancetype)sharedAuthService
@@ -35,6 +38,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
         _gcAuthed = NO;
         _serverAuthed = NO;
         _anonymous = YES;
+        _cancelled = NO;
     }
 
     return self;
@@ -58,15 +62,20 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     return uuidStr;
 }
 
--(void)authLocalPlayer
+-(void)authLocalPlayer:(NSString *)serverUrl
 {
+    NSLog(@"Starting auth");
+    _serverUrl = [NSURL URLWithString:serverUrl];
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
+        NSLog(@"Starting authenticateHandler");
         [self setLasterror:error];
         
         if(viewController != nil) {
             [self setAuthViewController:viewController];
+            return;
         } else if([GKLocalPlayer localPlayer].isAuthenticated) {
+            NSLog(@"Player is authenticated");
             _gcAuthed = YES;
             _anonymous = NO;
 
@@ -81,58 +90,58 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                     NSLog(@"GameCenter auth failure: %@ ", error);
                     _lasterror = error;
 
-                    [UnityExtern sendUnityMessage:@"Main Camera"
-                                           method:@"LoginResult"
-                                          message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
-
                     self.playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
-                                                              andUrl:publicKeyUrl
-                                                              andSig:signature
-                                                             andSalt:salt
-                                                             andTime:timestamp
-                                                             andName:localPlayer.alias];
+                                                                 url:publicKeyUrl
+                                                           signature:signature
+                                                                salt:salt
+                                                           timestamp:timestamp
+                                                                name:localPlayer.alias
+                                                            bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+                    [self updateUIText];
+                    [self fireServerRequest];
                 } else {
+                    NSLog(@"generated player info");
                     self.playerInfo = [[PlayerInfo alloc] initWithId:localPlayer.playerID
-                                                              andUrl:publicKeyUrl
-                                                              andSig:signature
-                                                             andSalt:salt
-                                                             andTime:timestamp
-                                                             andName:localPlayer.alias];
+                                                                 url:publicKeyUrl
+                                                           signature:signature
+                                                                salt:salt
+                                                           timestamp:timestamp
+                                                                name:localPlayer.alias
+                                                            bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+                    [self updateUIText];
+                    [self fireServerRequest];
                 }
             }];
 
         } else {
+            NSLog(@"player cancelled");
             _gcAuthed = NO;
             _anonymous = YES;
-            [UnityExtern sendUnityMessage:@"Main Camera"
-                                   method:@"LoginResult"
-                                  message:[NSString stringWithUTF8String:[AuthService.authStatus[3] UTF8String]]];
 
             self.playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
-                                                      andUrl:nil
-                                                      andSig:nil
-                                                     andSalt:nil
-                                                     andTime:0
-                                                     andName:@""];
+                                                         url:nil
+                                                   signature:nil
+                                                        salt:nil
+                                                   timestamp:0
+                                                        name:@""
+                                                    bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+            [self updateUIText];
+            [self fireServerRequest];
         }
     };
 }
 
-- (NSString *)getFirstPartyPlayerId {
-    if(_gcAuthed) {
-        return nil;
-    } else if (_playerInfo == nil) {
-        return nil;
+- (NSString *)getPlayerId {
+    if (_playerInfo == nil) {
+        return @"";
     } else {
-        return _playerInfo.firstPartyPlayerId;
+        return _playerInfo.playerId;
     }
 }
 
 - (NSString *)getPlayerName {
-    if(_gcAuthed) {
-        return nil;
-    } else if (_playerInfo == nil) {
-        return nil;
+    if (_playerInfo == nil) {
+        return @"";
     } else {
         return _playerInfo.playerName;
     }
@@ -140,18 +149,32 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 
 - (NSString *)getFailureError {
     if(_lasterror == nil) {
-        return nil;
+        return @"";
     } else {
         NSString *errorStr = [[_lasterror userInfo] description];
         return [NSString stringWithUTF8String:[errorStr UTF8String]];
     }
 }
 
-- (NSString *)getPlayerId {
-    if(_gcAuthed && !_anonymous) {
-        return @"";
+- (NSString *)getSessionToken {
+    if(_httpCookie != nil) {
+        return _httpCookie.value;
     } else {
         return @"";
+    }
+}
+
+- (NSString *)getServerPlayerId {
+    if(_playerInfo != nil) {
+        return _playerInfo.serverPlayerId;
+    } else {
+        return @"";
+    }
+}
+
+- (void)setServerPlayerId:(NSString *)serverPlayerId {
+    if(_playerInfo != nil) {
+        _playerInfo.serverPlayerId = serverPlayerId;
     }
 }
 
@@ -161,6 +184,71 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     } else {
         return YES;
     }
+}
+
+- (void)fireServerRequest {
+    [HTTPHelper HTTPRequest:_serverUrl
+                     method:POST
+                       body:[self.playerInfo convertToDict]
+                      block:^(NSData *data, NSURLResponse *response, NSError *blockerror) {
+                          NSLog(@"response from server");
+                          if (blockerror != nil) {
+                              _lasterror = blockerror;
+                              NSLog(@"%@", [self getFailureError]);
+
+                              [UnityExtern sendUnityMessage:@"Main Camera"
+                                                     method:@"LoginResult"
+                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
+
+                              [self updateUIText];
+                              return;
+                          }
+
+                          NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *) response;
+                          NSInteger statusCode = HTTPResponse.statusCode;
+
+                          if (statusCode != 200) {
+                              NSLog(@"AuthServer call failed");
+                              [UnityExtern sendUnityMessage:@"Main Camera"
+                                                     method:@"LoginResult"
+                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[2] UTF8String]]];
+
+                              [self updateUIText];
+                              return;
+                          }
+
+                          NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[HTTPResponse allHeaderFields]
+                                                                                    forURL:_serverUrl];
+                          for (NSHTTPCookie *cookie in cookies) {
+                              if([cookie.name isEqualToString:@"session-token"]) {
+                                  _httpCookie = cookie;
+                              }
+                          }
+
+                          NSError *parseError = nil;
+                          NSMutableDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+                                                                                      options:NSJSONReadingMutableContainers
+                                                                                        error:&parseError];
+
+                          if(parseError == nil) {
+                              [self setServerPlayerId:dict[@"id"]];
+                          } else {
+                              [self setLasterror:parseError];
+                          }
+
+                          if(_cancelled) {
+                              [UnityExtern sendUnityMessage:@"Main Camera"
+                                                     method:@"LoginResult"
+                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[3] UTF8String]]];
+                          } else {
+                              [UnityExtern sendUnityMessage:@"Main Camera"
+                                                     method:@"LoginResult"
+                                                    message:[NSString stringWithUTF8String:[AuthService.authStatus[1] UTF8String]]];
+                          }
+
+                          _serverAuthed = YES;
+                          [self updateUIText];
+                      }];
 }
 
 
@@ -177,16 +265,28 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     _lasterror = lasterror;
     if(_lasterror) {
         NSLog(@"GameCenter auth failure: %@ ", [[_lasterror userInfo] description]);
-
-        [UnityExtern sendUnityMessage:@"Main Camera"
-                               method:@"LoginResult"
-                              message:[NSString stringWithUTF8String:[AuthService.authStatus[3] UTF8String]]];
     }
 }
 
 -(void)setPlayerInfo:(PlayerInfo *)playerInfo {
-    if(playerInfo != nil) {
-        _playerInfo = playerInfo;
+    if(_playerInfo.playerId != nil) {
+        if(_playerInfo.playerId != playerInfo.playerId) {
+            [UnityExtern sendUnityMessage:@"Main Camera"
+                                   method:@"PlayerChange"
+                                  message:@"true"];
+        }
+    }
+
+    _playerInfo = playerInfo;
+}
+
+- (void)setRootViewController:(ViewController *)controller {
+    _rootViewController = controller;
+}
+
+-(void)updateUIText {
+    if(_rootViewController != nil) {
+        [_rootViewController updateTextViews];
     }
 }
 

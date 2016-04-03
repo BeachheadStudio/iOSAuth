@@ -7,32 +7,55 @@
 
 @implementation PlayerInfo
 
-@synthesize firstPartyPlayerId;
+@synthesize playerId;
 @synthesize publicKeyUrl;
 @synthesize signature;
 @synthesize salt;
 @synthesize timestamp;
 @synthesize playerName;
+@synthesize bundleId;
+@synthesize network;
+@synthesize serverPlayerId;
 
-- (id)initWithId:(NSString *)id
-          andUrl:(NSURL *)url
-          andSig:(NSData *)sig
-         andSalt:(NSData *)salt_
-         andTime:(uint64_t)time
-         andName:(NSString *)name
+- (id)initWithId:(NSString *)id_
+             url:(NSURL *)url_
+       signature:(NSData *)signature_
+            salt:(NSData *)salt_
+       timestamp:(uint64_t)timestamp_
+            name:(NSString *)name_
+        bundleId:(NSString *)bundleId_
 {
     self = [super init];
 
     if(self) {
-        firstPartyPlayerId = id;
-        publicKeyUrl = url;
-        signature = sig;
+        playerId = id_;
+        publicKeyUrl = url_;
+        signature = signature_;
         salt = salt_;
-        timestamp = time;
-        playerName = name;
+        timestamp = timestamp_;
+        playerName = name_;
+        bundleId = bundleId_;
+        network = @"APPLE";
+        serverPlayerId = @"";
     }
 
     return self;
 }
+
+- (NSMutableDictionary *)convertToDict {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+
+    [dict setValue:playerId forKey:@"playerId"];
+    [dict setValue:[publicKeyUrl absoluteString] forKey:@"publicKeyUrl"];
+    [dict setValue:[signature base64EncodedStringWithOptions:0] forKey:@"signature"];
+    [dict setValue:[salt base64EncodedStringWithOptions:0] forKey:@"salt"];
+    [dict setValue:@(timestamp) forKey:@"timestamp"];
+    [dict setValue:playerName forKey:@"playerName"];
+    [dict setValue:bundleId forKey:@"bundleId"];
+    [dict setValue:network forKey:@"network"];
+
+    return dict;
+}
+
 
 @end

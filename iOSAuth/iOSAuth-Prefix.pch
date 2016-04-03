@@ -14,13 +14,4 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void UnitySendMessage(const char* obj, const char* method, const char* msg);
-#ifdef __cplusplus
-}
-#endif
-
-
 #endif /* iOSAuth_Prefix_pch */
