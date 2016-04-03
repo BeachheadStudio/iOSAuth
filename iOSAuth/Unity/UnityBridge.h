@@ -17,15 +17,15 @@ void sendUnityMessage(const char* object, const char* method, const char* messag
 extern "C" {
 #endif
 
-    extern void nativeLog(const char* message);
-    extern void Init(const char* serverUrl);
-    extern const char* PlayerName();
-    extern const char* PlayerId();
-    extern const char* FirstPartyPlayerId();
-    extern const char* FailureError();
-    extern const char* SessionToken();
-    extern void OnPause();
-    extern void OnResume();
+    extern void NativeLog(const char* message);
+    extern void AuthLocalPlayer(const char* serverUrl);
+    extern const char* GetPlayerName();
+    extern const char* GetPlayerId();
+    extern const char* GetFirstPartyPlayerId();
+    extern const char* GetFailureError();
+    extern const char* GetSessionToken();
+    extern void NativeOnPause();
+    extern void NativeOnResume();
 
 #if __cplusplus
 }

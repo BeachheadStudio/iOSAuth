@@ -24,39 +24,39 @@ void sendUnityMessage(const char* object, const char* method, const char* messag
 #if __cplusplus
 extern "C" {
 #endif
-    extern void nativeLog(const char* message) {
+    extern void NativeLog(const char* message) {
         NSLog(@"UnityLog: %@", [NSString stringWithUTF8String:message]);
     }
 
-    extern void Init(const char* serverUrl) {
+    extern void AuthLocalPlayer(const char* serverUrl) {
         [[AuthService sharedAuthService] authLocalPlayer:[NSString stringWithUTF8String:serverUrl]];
     }
 
-    extern const char* PlayerName() {
+    extern const char* GetPlayerName() {
         return [[[AuthService sharedAuthService] getPlayerName] UTF8String];
     }
 
-    extern const char* PlayerId() {
+    extern const char* GetPlayerId() {
         return [[[AuthService sharedAuthService] getServerPlayerId] UTF8String];
     }
 
-    extern const char* FirstPartyPlayerId() {
+    extern const char*GetFirstPartyPlayerId() {
         return [[[AuthService sharedAuthService] getPlayerId] UTF8String];
     }
 
-    extern const char* FailureError() {
+    extern const char*GetFailureError() {
         return [[[AuthService sharedAuthService] getFailureError] UTF8String];
     }
 
-    extern const char* SessionToken() {
+    extern const char*GetSessionToken() {
         return [[[AuthService sharedAuthService] getPlayerName] UTF8String];
     }
 
-    extern void OnPause() {
+    extern void NativeOnPause() {
         NSLog(@"Unity: OnPause");
     }
 
-    extern void OnResume() {
+    extern void NativeOnResume() {
         NSLog(@"Unity: OnResume");
     }
 
