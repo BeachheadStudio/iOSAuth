@@ -61,8 +61,9 @@ extern "C" {
         NSLog(@"UnityLog: %@", CreateNSString(message));
     }
 
-    void AuthLocalPlayer(const char* serverUrl) {
-        [[AuthService sharedAuthService] authLocalPlayer:CreateNSString(serverUrl)];
+    void AuthLocalPlayer(const char* serverUrl, const char* serverPlayerId) {
+        [[AuthService sharedAuthService] authLocalPlayer:CreateNSString(serverUrl)
+                                          serverPlayerId:CreateNSString(serverPlayerId)];
     }
 
     const char* GetPlayerName() {
@@ -91,6 +92,10 @@ extern "C" {
 
     void NativeOnResume() {
         NSLog(@"Unity: OnResume");
+    }
+
+    bool NativeIsAnonymous() {
+        return ([[AuthService sharedAuthService] isAnonymous]);
     }
 
 #if __cplusplus

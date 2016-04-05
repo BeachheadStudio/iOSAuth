@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
     extern void NativeLog(const char* message);
-    extern void AuthLocalPlayer(const char* serverUrl);
+    extern void AuthLocalPlayer(const char* serverUrl, const char* serverPlayerId);
     extern const char* GetPlayerName();
     extern const char* GetPlayerId();
     extern const char* GetFirstPartyPlayerId();

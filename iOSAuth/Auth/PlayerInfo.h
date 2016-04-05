@@ -24,6 +24,7 @@
 @property (nonatomic, readwrite) NSString *network;
 
 - (id)initWithId:(NSString *)id_
+  serverPlayerId:(NSString *)serverPlayerId_
              url:(NSURL *)url_
        signature:(NSData *)signature_
             salt:(NSData *)salt_

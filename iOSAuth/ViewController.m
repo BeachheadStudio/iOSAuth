@@ -52,7 +52,7 @@
     
     [[AuthService sharedAuthService] setRootViewController:self];
     
-    [[AuthService sharedAuthService] authLocalPlayer:@"http://192.168.1.154:8080/auth"];
+    [[AuthService sharedAuthService] authLocalPlayer:@"http://192.168.1.154:8080/auth" serverPlayerId:nil];
 }
 
 -(void)showAuthViewController

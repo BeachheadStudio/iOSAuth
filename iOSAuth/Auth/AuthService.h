@@ -32,7 +32,8 @@ extern NSString *const PresentAuthViewController;
 +(NSArray *)authStatus;
 +(NSString *)generateUUID;
 
--(void)authLocalPlayer:(NSString *)serverUrl;
+-(void)authLocalPlayer:(NSString *)serverUrl
+        serverPlayerId:(NSString *)serverPlayerId;
 -(NSString *)getPlayerId;
 -(NSString *)getPlayerName;
 -(NSString *)getFailureError;

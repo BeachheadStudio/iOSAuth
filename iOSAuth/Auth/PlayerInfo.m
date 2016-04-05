@@ -9,6 +9,7 @@
 @implementation PlayerInfo
 
 @synthesize playerId;
+@synthesize serverPlayerId;
 @synthesize publicKeyUrl;
 @synthesize signature;
 @synthesize salt;
@@ -16,9 +17,9 @@
 @synthesize playerName;
 @synthesize bundleId;
 @synthesize network;
-@synthesize serverPlayerId;
 
 - (id)initWithId:(NSString *)id_
+  serverPlayerId:(NSString *)serverPlayerId_
              url:(NSURL *)url_
        signature:(NSData *)signature_
             salt:(NSData *)salt_
@@ -30,6 +31,7 @@
 
     if(self) {
         playerId = id_;
+        serverPlayerId = serverPlayerId_;
         publicKeyUrl = url_;
         signature = signature_;
         salt = salt_;

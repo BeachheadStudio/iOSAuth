@@ -22,6 +22,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     BOOL _serverAuthed;
     BOOL _cancelled;
     NSURL *_serverUrl;
+    NSString *_serverPlayerId;
 }
 
 +(instancetype)sharedAuthService
@@ -67,9 +68,15 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 }
 
 -(void)authLocalPlayer:(NSString *)serverUrl
+        serverPlayerId:(NSString *)serverPlayerId
 {
     NSLog(@"Starting auth");
     _serverUrl = [NSURL URLWithString:serverUrl];
+    _serverPlayerId = serverPlayerId;
+    if([_serverPlayerId length] == 0) {
+        _serverPlayerId = [AuthService generateUUID];
+    }
+
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         NSLog(@"Starting authenticateHandler");
@@ -94,11 +101,12 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                     NSLog(@"GameCenter auth failure: %@ ", error);
                     _lasterror = error;
 
-                    _playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
-                                                             url:publicKeyUrl
-                                                       signature:signature
-                                                            salt:salt
-                                                       timestamp:timestamp
+                    _playerInfo = [[PlayerInfo alloc] initWithId:@""
+                                                  serverPlayerId:_serverPlayerId
+                                                             url:nil
+                                                       signature:nil
+                                                            salt:nil
+                                                       timestamp:0
                                                             name:localPlayer.alias
                                                         bundleId:[[NSBundle mainBundle] bundleIdentifier]];
 #if !UNITY_IOS
@@ -108,6 +116,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                 } else {
                     NSLog(@"generated player info");
                     _playerInfo = [[PlayerInfo alloc] initWithId:localPlayer.playerID
+                                                  serverPlayerId:_serverPlayerId
                                                              url:publicKeyUrl
                                                        signature:signature
                                                             salt:salt
@@ -126,7 +135,8 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
             _gcAuthed = NO;
             _anonymous = YES;
 
-            _playerInfo = [[PlayerInfo alloc] initWithId:[AuthService generateUUID]
+            _playerInfo = [[PlayerInfo alloc] initWithId:@""
+                                          serverPlayerId:_serverPlayerId
                                                      url:nil
                                                signature:nil
                                                     salt:nil
