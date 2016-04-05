@@ -5,14 +5,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import "UnityBridge.h"
+#import "AuthUnityBridge.h"
 #import "AuthService.h"
 
-@interface UnityBridge () {
+@interface AuthUnityBridge () {
 }
 @end
 
-@implementation UnityBridge
+@implementation AuthUnityBridge
 
 @end
 

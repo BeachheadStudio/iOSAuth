@@ -12,7 +12,7 @@
 
 #import "AuthService.h"
 #import "PlayerInfo.h"
-#import "UnityBridge.h"
+#import "AuthUnityBridge.h"
 #import "HTTPHelper.h"
 
 NSString *const PresentAuthViewController = @"present_authentication_view_controller";
@@ -216,7 +216,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               _lasterror = blockerror;
                               NSLog(@"%@", [self getFailureError]);
 
-                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
+                              SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[2] UTF8String]);
 #if !UNITY_IOS
                               [self updateUIText];
 #endif
@@ -229,7 +229,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           if (statusCode != 200) {
                               NSLog(@"AuthServer call failed");
 
-                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[2] UTF8String]);
+                              SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[2] UTF8String]);
 #if !UNITY_IOS
                               [self updateUIText];
 #endif
@@ -256,9 +256,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           }
 
                           if(_cancelled) {
-                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[3] UTF8String]);
+                              SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[3] UTF8String]);
                           } else {
-                              SendUnityMessage("Main Camera", "LoginResult", [AuthService.authStatus[1] UTF8String]);
+                              SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[1] UTF8String]);
                           }
 
                           _serverAuthed = YES;
@@ -289,7 +289,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 -(void)setPlayerInfo:(PlayerInfo *)playerInfo {
     if(_playerInfo.playerId != nil) {
         if(_playerInfo.playerId != playerInfo.playerId) {
-            SendUnityMessage("Main Camera", "PlayerChange", "true");
+            SendUnityMessage("AuthGameObject", "PlayerChange", "true");
         }
     }
 

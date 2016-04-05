@@ -7,7 +7,7 @@
 #define UnityExtern_h
 
 
-@interface UnityBridge : NSObject
+@interface AuthUnityBridge : NSObject
 
 @end
 
