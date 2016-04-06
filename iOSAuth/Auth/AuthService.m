@@ -14,6 +14,9 @@
 #import "PlayerInfo.h"
 #import "AuthUnityBridge.h"
 #import "HTTPHelper.h"
+#if UNITY_IOS
+#import "UnityInterface.h"
+#endif
 
 NSString *const PresentAuthViewController = @"present_authentication_view_controller";
 
@@ -266,7 +269,14 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 {
     if(authViewController != nil) {
         _authViewController = authViewController;
+#if UNITY_IOS
+        [UnityGetGLViewController() presentViewController:_authViewController
+                                                 animated:YES
+                                               completion:nil];
+#else
         [[NSNotificationCenter defaultCenter] postNotificationName:PresentAuthViewController object:self];
+#endif
+
     }
 }
 
