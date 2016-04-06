@@ -49,6 +49,7 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
 
     [dict setValue:playerId forKey:@"playerId"];
+    [dict setValue:serverPlayerId forKey:@"serverPlayerId"];
     [dict setValue:[publicKeyUrl absoluteString] forKey:@"publicKeyUrl"];
     [dict setValue:[signature base64EncodedStringWithOptions:0] forKey:@"signature"];
     [dict setValue:[salt base64EncodedStringWithOptions:0] forKey:@"salt"];
