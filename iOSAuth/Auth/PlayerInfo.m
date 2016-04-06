@@ -39,7 +39,6 @@
         playerName = name_;
         bundleId = bundleId_;
         network = @"APPLE";
-        serverPlayerId = @"";
     }
 
     return self;
