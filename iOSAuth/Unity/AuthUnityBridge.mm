@@ -83,7 +83,7 @@ extern "C" {
     }
 
     const char* GetSessionToken() {
-        return MakeStringCopy(CreateConstChar([[AuthService sharedAuthService] getPlayerName]));
+        return MakeStringCopy(CreateConstChar([[AuthService sharedAuthService] getSessionToken]));
     }
 
     void NativeOnPause() {

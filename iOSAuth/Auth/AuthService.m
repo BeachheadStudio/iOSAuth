@@ -32,7 +32,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     dispatch_once(&onceToken, ^{
         sharedAuthService = [[AuthService alloc] init];
     });
-    
+
     return sharedAuthService;
 }
 
@@ -81,7 +81,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         NSLog(@"Starting authenticateHandler");
         [self setLasterror:error];
-        
+
         if(viewController != nil) {
             [self setAuthViewController:viewController];
             return;
@@ -101,28 +101,28 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                     NSLog(@"GameCenter auth failure: %@ ", error);
                     _lasterror = error;
 
-                    _playerInfo = [[PlayerInfo alloc] initWithId:@""
-                                                  serverPlayerId:_serverPlayerId
-                                                             url:nil
-                                                       signature:nil
-                                                            salt:nil
-                                                       timestamp:0
-                                                            name:localPlayer.alias
-                                                        bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+                    [self setPlayerInfo:[[PlayerInfo alloc] initWithId:@""
+                                                        serverPlayerId:_serverPlayerId
+                                                                   url:nil
+                                                             signature:nil
+                                                                  salt:nil
+                                                             timestamp:0
+                                                                  name:localPlayer.alias
+                                                              bundleId:[[NSBundle mainBundle] bundleIdentifier]]];
 #if !UNITY_IOS
                     [self updateUIText];
 #endif
                     [self fireServerRequest];
                 } else {
                     NSLog(@"generated player info");
-                    _playerInfo = [[PlayerInfo alloc] initWithId:localPlayer.playerID
-                                                  serverPlayerId:_serverPlayerId
-                                                             url:publicKeyUrl
-                                                       signature:signature
-                                                            salt:salt
-                                                       timestamp:timestamp
-                                                            name:localPlayer.alias
-                                                        bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+                    [self setPlayerInfo:[[PlayerInfo alloc] initWithId:localPlayer.playerID
+                                                        serverPlayerId:_serverPlayerId
+                                                                   url:publicKeyUrl
+                                                             signature:signature
+                                                                  salt:salt
+                                                             timestamp:timestamp
+                                                                  name:localPlayer.alias
+                                                              bundleId:[[NSBundle mainBundle] bundleIdentifier]]];
 #if !UNITY_IOS
                     [self updateUIText];
 #endif
@@ -135,14 +135,14 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
             _gcAuthed = NO;
             _anonymous = YES;
 
-            _playerInfo = [[PlayerInfo alloc] initWithId:@""
-                                          serverPlayerId:_serverPlayerId
-                                                     url:nil
-                                               signature:nil
-                                                    salt:nil
-                                               timestamp:0
-                                                    name:@""
-                                                bundleId:[[NSBundle mainBundle] bundleIdentifier]];
+            [self setPlayerInfo:[[PlayerInfo alloc] initWithId:@""
+                                                serverPlayerId:_serverPlayerId
+                                                           url:nil
+                                                     signature:nil
+                                                          salt:nil
+                                                     timestamp:0
+                                                          name:@""
+                                                     bundleId:[[NSBundle mainBundle] bundleIdentifier]]];
 #if !UNITY_IOS
             [self updateUIText];
 #endif
@@ -185,17 +185,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 }
 
 - (NSString *)getServerPlayerId {
-    if(_playerInfo != nil) {
-        return _playerInfo.serverPlayerId;
-    } else {
-        return @"";
-    }
-}
-
-- (void)setServerPlayerId:(NSString *)serverPlayerId {
-    if(_playerInfo != nil) {
-        _playerInfo.serverPlayerId = serverPlayerId;
-    }
+    return _serverPlayerId;
 }
 
 - (BOOL)isAnonymous {
@@ -250,7 +240,9 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                                                         error:&parseError];
 
                           if(parseError == nil) {
-                              [self setServerPlayerId:dict[@"id"]];
+                              _serverPlayerId = dict[@"realPlayerID"];
+                              _playerInfo.playerName = dict[@"playerName"];
+                              _anonymous = [dict[@"isAnonymous"] boolValue];
                           } else {
                               [self setLasterror:parseError];
                           }

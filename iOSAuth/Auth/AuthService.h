@@ -43,7 +43,6 @@ extern NSString *const PresentAuthViewController;
 -(void)setRootViewController:(ViewController *)controller;
 -(void)updateUIText;
 #endif
--(void)setServerPlayerId:(NSString *)serverPlayerId;
 -(BOOL)isAnonymous;
 -(void)fireServerRequest;
 
