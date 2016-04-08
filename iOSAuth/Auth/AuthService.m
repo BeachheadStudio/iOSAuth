@@ -62,23 +62,12 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     return values;
 }
 
-+ (NSString *)generateUUID {
-    CFUUIDRef uuid = CFUUIDCreate(NULL);
-    NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
-    CFRelease(uuid);
-
-    return uuidStr;
-}
-
 -(void)authLocalPlayer:(NSString *)serverUrl
         serverPlayerId:(NSString *)serverPlayerId
 {
     NSLog(@"Starting auth");
     _serverUrl = [NSURL URLWithString:serverUrl];
     _serverPlayerId = serverPlayerId;
-    if([_serverPlayerId length] == 0) {
-        _serverPlayerId = [AuthService generateUUID];
-    }
 
     if(_gcModelShown) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];

@@ -30,7 +30,6 @@ extern NSString *const PresentAuthViewController;
 
 +(instancetype)sharedAuthService;
 +(NSArray *)authStatus;
-+(NSString *)generateUUID;
 
 -(void)authLocalPlayer:(NSString *)serverUrl
         serverPlayerId:(NSString *)serverPlayerId;
