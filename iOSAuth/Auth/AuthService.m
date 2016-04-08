@@ -21,8 +21,8 @@
 NSString *const PresentAuthViewController = @"present_authentication_view_controller";
 
 @implementation AuthService {
+    BOOL _gcModelShown;
     BOOL _gcAuthed;
-    BOOL _serverAuthed;
     BOOL _cancelled;
     NSURL *_serverUrl;
     NSString *_serverPlayerId;
@@ -43,8 +43,8 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 {
     self = [super init];
     if(self) {
+        _gcModelShown = NO;
         _gcAuthed = NO;
-        _serverAuthed = NO;
         _anonymous = YES;
         _cancelled = NO;
     }
@@ -80,6 +80,11 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
         _serverPlayerId = [AuthService generateUUID];
     }
 
+    if(_gcModelShown) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+        return;
+    }
+
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         NSLog(@"Starting authenticateHandler");
@@ -87,11 +92,11 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 
         if(viewController != nil) {
             [self setAuthViewController:viewController];
-            return;
         } else if([GKLocalPlayer localPlayer].isAuthenticated) {
             NSLog(@"Player is authenticated");
             _gcAuthed = YES;
             _anonymous = NO;
+            _gcModelShown = NO;
 
             [localPlayer generateIdentityVerificationSignatureWithCompletionHandler:^
             (NSURL *publicKeyUrl, NSData *signature, NSData *salt, uint64_t timestamp, NSError *error_)
@@ -255,8 +260,6 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                           } else {
                               SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[1] UTF8String]);
                           }
-
-                          _serverAuthed = YES;
 #if !UNITY_IOS
                           [self updateUIText];
 #endif
@@ -269,6 +272,8 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 {
     if(authViewController != nil) {
         _authViewController = authViewController;
+
+        _gcModelShown = YES;
 #if UNITY_IOS
         [UnityGetGLViewController() presentViewController:_authViewController
                                                  animated:YES

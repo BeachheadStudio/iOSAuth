@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UITextView *piTextView;
 @property (strong, nonatomic) IBOutlet UITextView *errorTextView;
 @property (strong, nonatomic) IBOutlet UITextView *stTextView;
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
 @end
 
@@ -49,6 +50,12 @@
      name:PresentAuthViewController object:nil];
     
     [self addTextViews];
+
+    _loginButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_loginButton addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchDown];
+    [_loginButton setFrame:CGRectMake(0, 520, 200, 80)];
+    [_loginButton setTitle:@"Login" forState:UIControlStateNormal];
+    [self.view addSubview:_loginButton];
     
     [[AuthService sharedAuthService] setRootViewController:self];
     
@@ -59,10 +66,10 @@
 {
     NSLog(@"showAuthViewController");
     
-    [self.topViewController presentViewController:[AuthService sharedAuthService].authViewController
-                                         animated:YES
-                                       completion:nil
-     ];
+    [self presentViewController:[AuthService sharedAuthService].authViewController
+                       animated:YES
+                     completion:nil];
+    
 }
 
 -(void)addTextViews {
@@ -119,6 +126,11 @@
     } else {
         dispatch_sync(dispatch_get_main_queue(), block);
     }
+}
+
+- (void)click:(UIButton *)button
+{
+    [[AuthService sharedAuthService] authLocalPlayer:@"http://192.168.1.154:8080/auth" serverPlayerId:nil];
 }
 
 -(void)dealloc

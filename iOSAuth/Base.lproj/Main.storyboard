@@ -41,6 +41,10 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cTo-rV-c1B">
+                                <rect key="frame" x="170" y="518" width="261" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -48,6 +52,7 @@
                         <outlet property="aTextView" destination="Cvx-lP-YJr" id="aek-QO-bl8"/>
                         <outlet property="fppiTextView" destination="MDd-05-EW1" id="zec-ql-Qcy"/>
                         <outlet property="gtTextView" destination="OW1-Cm-1t1" id="ULn-NH-fgt"/>
+                        <outlet property="loginButton" destination="cTo-rV-c1B" id="d3x-BB-z3s"/>
                         <outlet property="piTextView" destination="c3B-Ny-o5P" id="AoF-lO-hru"/>
                     </connections>
                 </viewController>
