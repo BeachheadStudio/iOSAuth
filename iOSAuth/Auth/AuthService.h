@@ -45,6 +45,7 @@ extern NSString *const PresentAuthViewController;
 #endif
 -(BOOL)isAnonymous;
 -(void)fireServerRequest;
+-(void)awardAchievement:(NSString *)achievementId;
 
 @end
 

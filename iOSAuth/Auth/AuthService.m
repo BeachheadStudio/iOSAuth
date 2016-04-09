@@ -131,6 +131,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
             NSLog(@"player cancelled");
             _gcAuthed = NO;
             _anonymous = YES;
+            _gcModelShown = YES;
 
             [self setPlayerInfo:[[PlayerInfo alloc] initWithId:@""
                                                 serverPlayerId:_serverPlayerId
@@ -282,6 +283,27 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 #endif
 
                       }];
+}
+
+- (void)awardAchievement:(NSString *)achievementId {
+    GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier:achievementId];
+
+    if(achievement == nil) {
+        NSLog(@"Achievement %@ doesn't exist", achievementId);
+        return;
+    }
+
+    achievement.showsCompletionBanner = YES;
+    achievement.percentComplete = 100.0;
+
+    NSArray<GKAchievement *> *achievements = @[achievement];
+    [GKAchievement reportAchievements:achievements
+                withCompletionHandler:^(NSError *error) {
+                    if(error != nil) {
+                        _lasterror = error;
+                        NSLog(@"Error awarding achievement: %@", [[_lasterror userInfo] description]);
+                    }
+                }];
 }
 
 

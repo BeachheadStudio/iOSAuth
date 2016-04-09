@@ -102,6 +102,10 @@ extern "C" {
         return MakeStringCopy(CreateConstChar([[AuthService sharedAuthService] getAuthParams]));
     }
 
+    void NativeAwardAchievement(const char* achievementId) {
+        [[AuthService sharedAuthService] awardAchievement:CreateNSString(achievementId)];
+    }
+
 #if __cplusplus
 }
 #endif
