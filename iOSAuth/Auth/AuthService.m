@@ -81,7 +81,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 
         if(viewController != nil) {
             [self setAuthViewController:viewController];
-        } else if([GKLocalPlayer localPlayer].isAuthenticated) {
+        } else if([[GKLocalPlayer localPlayer] isAuthenticated]) {
             NSLog(@"Player is authenticated");
             _gcAuthed = YES;
             _anonymous = NO;
@@ -180,6 +180,34 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
         return @"";
     }
 }
+
+- (NSString *)getAuthParams {
+    __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+    if([localPlayer isAuthenticated]) {
+        NSError *error;
+        NSMutableDictionary *dict = [_playerInfo convertToDict];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+
+        if(error != nil) {
+            [NSException raise:@"Could not turn object into JSON" format:@"object of %@ is invalid", dict];
+        }
+
+        char lastByte;
+        [jsonData getBytes:&lastByte range:NSMakeRange([jsonData length]-1, 1)];
+        if (lastByte == 0x0) {
+            // string is null terminated
+            return [NSString stringWithUTF8String:[jsonData bytes]];
+        } else {
+            // string is not null terminated
+            return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+    } else {
+        return @"";
+    }
+}
+
 
 - (NSString *)getServerPlayerId {
     return _serverPlayerId;

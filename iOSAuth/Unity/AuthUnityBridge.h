@@ -36,6 +36,7 @@ extern "C" {
     extern const char* GetSessionToken();
     extern void NativeOnPause();
     extern void NativeOnResume();
+    extern const char* GetNativeAuthParams();
 
 #if __cplusplus
 }

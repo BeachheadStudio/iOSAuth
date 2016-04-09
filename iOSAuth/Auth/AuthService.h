@@ -38,6 +38,7 @@ extern NSString *const PresentAuthViewController;
 -(NSString *)getFailureError;
 -(NSString *)getServerPlayerId;
 -(NSString *)getSessionToken;
+-(NSString *)getAuthParams;
 #if !UNITY_IOS
 -(void)setRootViewController:(ViewController *)controller;
 -(void)updateUIText;

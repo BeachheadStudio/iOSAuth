@@ -98,6 +98,10 @@ extern "C" {
         return ([[AuthService sharedAuthService] isAnonymous]);
     }
 
+    const char* GetNativeAuthParams() {
+        return MakeStringCopy(CreateConstChar([[AuthService sharedAuthService] getAuthParams]));
+    }
+
 #if __cplusplus
 }
 #endif
