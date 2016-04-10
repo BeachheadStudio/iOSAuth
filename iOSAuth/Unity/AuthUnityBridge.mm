@@ -18,8 +18,8 @@
 
 void SendUnityMessage(const char *object, const char *method, const char *message) {
     NSLog(@"Firing event to unity: %@ %@ %@", [NSString stringWithUTF8String:object],
-                                              [NSString stringWithUTF8String:method],
-                                              [NSString stringWithUTF8String:message]);
+            [NSString stringWithUTF8String:method],
+            [NSString stringWithUTF8String:message]);
 #if UNITY_IOS
     UnitySendMessage(object, method, message);
 #endif
@@ -104,6 +104,10 @@ extern "C" {
 
     void NativeAwardAchievement(const char* achievementId) {
         [[AuthService sharedAuthService] awardAchievement:CreateNSString(achievementId)];
+    }
+
+    void NativeResetServerAuth() {
+        [[AuthService sharedAuthService] resetServerAuth];
     }
 
 #if __cplusplus

@@ -21,9 +21,10 @@
 NSString *const PresentAuthViewController = @"present_authentication_view_controller";
 
 @implementation AuthService {
-    BOOL _gcModelShown;
+    BOOL _gcModalShown;
     BOOL _gcAuthed;
     BOOL _cancelled;
+    BOOL _serverAuthed;
     NSURL *_serverUrl;
     NSString *_serverPlayerId;
 }
@@ -43,10 +44,11 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
 {
     self = [super init];
     if(self) {
-        _gcModelShown = NO;
+        _gcModalShown = NO;
         _gcAuthed = NO;
         _anonymous = YES;
         _cancelled = NO;
+        _serverAuthed = NO;
     }
 
     return self;
@@ -69,14 +71,34 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     _serverUrl = [NSURL URLWithString:serverUrl];
     _serverPlayerId = serverPlayerId;
 
-    if(_gcModelShown) {
+    if(_gcModalShown) {
+        NSLog(@"Already server authed");
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+        return;
+    }
+
+    if(_serverAuthed) {
+        NSLog(@"Already server authed");
+        return;
+    }
+
+    if(_playerInfo != nil) {
+        NSLog(@"Local player info already exists");
+        [self fireServerRequest];
         return;
     }
 
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         NSLog(@"Starting authenticateHandler");
+
+        if(_serverAuthed && [[GKLocalPlayer localPlayer] isAuthenticated]) {
+            NSLog(@"Already server authed");
+            return;
+        } else {
+            _serverAuthed = NO;
+        }
+
         [self setLasterror:error];
 
         if(viewController != nil) {
@@ -85,7 +107,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
             NSLog(@"Player is authenticated");
             _gcAuthed = YES;
             _anonymous = NO;
-            _gcModelShown = NO;
+            _gcModalShown = NO;
 
             [localPlayer generateIdentityVerificationSignatureWithCompletionHandler:^
             (NSURL *publicKeyUrl, NSData *signature, NSData *salt, uint64_t timestamp, NSError *error_)
@@ -131,7 +153,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
             NSLog(@"player cancelled");
             _gcAuthed = NO;
             _anonymous = YES;
-            _gcModelShown = YES;
+            _gcModalShown = YES;
 
             [self setPlayerInfo:[[PlayerInfo alloc] initWithId:@""
                                                 serverPlayerId:_serverPlayerId
@@ -140,7 +162,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                                                           salt:nil
                                                      timestamp:0
                                                           name:@""
-                                                     bundleId:[[NSBundle mainBundle] bundleIdentifier]]];
+                                                      bundleId:[[NSBundle mainBundle] bundleIdentifier]]];
 #if !UNITY_IOS
             [self updateUIText];
 #endif
@@ -196,7 +218,8 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
         }
 
         char lastByte;
-        [jsonData getBytes:&lastByte range:NSMakeRange([jsonData length]-1, 1)];
+        [jsonData getBytes:&lastByte
+                     range:NSMakeRange([jsonData length]-1, 1)];
         if (lastByte == 0x0) {
             // string is null terminated
             return [NSString stringWithUTF8String:[jsonData bytes]];
@@ -269,12 +292,16 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
                               _serverPlayerId = dict[@"realPlayerID"];
                               _playerInfo.playerName = dict[@"playerName"];
                               _anonymous = [dict[@"isAnonymous"] boolValue];
+
+                              _serverAuthed = YES;
                           } else {
                               [self setLasterror:parseError];
                           }
 
                           if(_cancelled) {
                               SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[3] UTF8String]);
+                          } else if(parseError != nil) {
+                              SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[2] UTF8String]);
                           } else {
                               SendUnityMessage("AuthGameObject", "LoginResult", [AuthService.authStatus[1] UTF8String]);
                           }
@@ -312,7 +339,7 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     if(authViewController != nil) {
         _authViewController = authViewController;
 
-        _gcModelShown = YES;
+        _gcModalShown = YES;
 #if UNITY_IOS
         [UnityGetGLViewController() presentViewController:_authViewController
                                                  animated:YES
@@ -340,6 +367,12 @@ NSString *const PresentAuthViewController = @"present_authentication_view_contro
     }
 
     _playerInfo = playerInfo;
+}
+
+-(void)resetServerAuth
+{
+    NSLog(@"resetServerAuth");
+    _serverAuthed = NO;
 }
 
 #if !UNITY_IOS

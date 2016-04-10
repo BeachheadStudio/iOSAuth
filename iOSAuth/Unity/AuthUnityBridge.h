@@ -38,6 +38,7 @@ extern "C" {
     extern void NativeOnResume();
     extern const char* GetNativeAuthParams();
     extern void NativeAwardAchievement(const char* achievementId);
+    extern void NativeResetServerAuth();
 
 #if __cplusplus
 }

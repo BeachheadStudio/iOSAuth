@@ -46,7 +46,7 @@ extern NSString *const PresentAuthViewController;
 -(BOOL)isAnonymous;
 -(void)fireServerRequest;
 -(void)awardAchievement:(NSString *)achievementId;
-
+-(void)resetServerAuth;
 @end
 
 #endif /* AuthService_h */
